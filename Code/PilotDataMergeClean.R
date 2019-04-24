@@ -25,7 +25,7 @@ CTtarget <- c("CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR")
 setwd(DataDirectory)
 
 host <- read.csv(file = "SMB_Pilot_Data_1.csv", stringsAsFactors = F)
-keep <- c('Well','PetID','SampleType','PetName','Origin','CollectionDate','Symptomatic')
+keep <- c('Well','PetID','SampleType','PetName','Origin','CollectionDate','Symptomatic', 'VialID')
 host <- host[,keep]
 
 
