@@ -91,3 +91,10 @@ for(i in 1:nID){
 }
 
 rm(ss)
+
+# Subest to get just nasal samples 
+
+panel <- subset(panel, !is.na(panel$nasal))  #doesn't work 
+panel <- subset(panel, !is.na(panel$PetID))   #remove controls
+
+panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
