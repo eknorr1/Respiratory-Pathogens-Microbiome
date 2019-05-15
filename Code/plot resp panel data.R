@@ -9,7 +9,7 @@ rm(list=ls())
 # Script parameters -------------------------------------------------------
 
 DoRandomization <- T   #shuffle the inverse CT scores for each pathogen?
-DataDirectory <- "~/Dropbox/Research/Active/Canine nosomes/Data/Pilot data from Liz Jan2019/"
+DataDirectory <- "~/Desktop/Pilot Data/Raw Data"
 
 
 
