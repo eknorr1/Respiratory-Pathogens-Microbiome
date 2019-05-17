@@ -11,7 +11,7 @@ graphics.off()
 
 # Load Libraries -------------------------------------------------------
 
-# None
+library(vegan)
 
 # Script Parameters ----------------------------------------------------
 
@@ -148,7 +148,7 @@ for(i in 1:nID){
 
 rm(ss)
 
-# State: Cali vs Oregon ---------------------------------
+# State: Cali vs Oregon --------------------------------------------------
 
 panel$State <- ifelse(panel$Origin=="Madera", "California",
                       ifelse(panel$Origin == "Hayward", "California",
@@ -160,5 +160,18 @@ panel$State <- ifelse(panel$Origin=="Madera", "California",
                                                                 NA )))))))
 
 
+
+# Shannon diversity ------------------------------------------------------
+
+
+panel$Shannon <- diversity(panel[,2:7], index = "shannon")
+
+# Evenness ---------------------------------------------------------------
+
+panel$Evenness <- (panel$Shannon/ log(panel$Coinfection))
+
+
+even <- panel$Evenness=="0"
+panel$Evenness[even] <- "NaN"
 
 
