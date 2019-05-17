@@ -54,7 +54,12 @@ panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
 
 # Invert CT score ---------------------------------------------------------
 
+# !!! Check colnames that 2 - 7 are "CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR"
+print(colnames(panel))
+
+
 CTcolumns <- 2:7
+
 panel[,CTcolumns] <- 1/panel[,CTcolumns]
 panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
 
