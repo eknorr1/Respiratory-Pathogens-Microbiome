@@ -110,9 +110,14 @@ panel$Origin <- factor(panel$Origin)
 
 # Add some variables ------------------------------------------------------
 
-CTcolumn <- which(names(panel) %in% CTtarget)
-x <- panel[,CTcolumn]
-panel$Richness <- rowSums(!is.na(x))
+# Total load 
+
+panel$Total_Load <- panel$CADEN + panel$BCOR + panel$BORD + panel$MCYN 
+  + panel$PINF + panel$PNVPCR 
+
+#Number of infections
+
+panel$Coinfection<- apply(panel[,2:7]>0,1,sum)
 
 
 # Update some variables by looking at individuals -------------------------
@@ -142,5 +147,18 @@ for(i in 1:nID){
 }
 
 rm(ss)
+
+# State: Cali vs Oregon ---------------------------------
+
+panel$State <- ifelse(panel$Origin=="Madera", "California",
+                      ifelse(panel$Origin == "Hayward", "California",
+                             ifelse(panel$Origin == "Merced", "California",
+                                    ifelse(panel$Origin == "Sacramento", "California",
+                                           ifelse(panel$Origin == "Fresno", "California",
+                                                  ifelse(panel$Origin=="Oakland", "California",
+                                                         ifelse(panel$Origin=="OHS", "Oregon",
+                                                                NA )))))))
+
+
 
 
