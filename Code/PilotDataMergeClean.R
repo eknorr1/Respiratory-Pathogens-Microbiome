@@ -144,35 +144,3 @@ for(i in 1:nID){
 rm(ss)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Transform CT scores to inverse Ct scores to account for high cycle counts
-# being low path abundance
-
-
-CTcolumns <- 2:7
-panel[,CTcolumns] <- 1/panel[,CTcolumns]
-panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
-
-
-
-# Subest to get just nasal samples 
-
-panel <- subset(panel, !is.na(panel$SampleType[nasal]))  #doesn't work 
-panel <- subset(panel, !is.na(panel$PetID))   #remove controls
-
-panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
