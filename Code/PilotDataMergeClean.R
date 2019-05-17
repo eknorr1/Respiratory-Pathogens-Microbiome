@@ -14,11 +14,49 @@ graphics.off()
 # None
 
 # Script Parameters ----------------------------------------------------
+
 #set to where data files are located
 
 DataDirectory <- "~/Desktop/Pilot Data/Raw Data"
 CTtarget <- c("CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR")
 
+
+
+# Load and merge datasets -------------------------------------------------
+
+setwd(DataDirectory)
+
+host <- read.csv(file = "SMB_Pilot_Data_1.csv", stringsAsFactors = F)
+keep <- c('Well','PetID','PetName','Origin','CollectionDate','Symptomatic','TotalDNA','TotalRNA')
+host <- host[,keep]
+
+suppressWarnings(host$TotalDNA <- as.numeric(host$TotalDNA))
+suppressWarnings(host$TotalRNA <- as.numeric(host$TotalRNA))
+
+host$Symptomatic <- host$Symptomatic=="Y"
+
+panel <- read.csv(file = "paneldata_1.csv", stringsAsFactors = F)
+discard <- which(names(panel)%in%c("X","MS2","SZ","Type"))
+panel <- panel[,-discard]
+
+panel <- merge(panel, host, by = "Well")
+
+rm(host, keep, discard)
+
+
+# Subset ------------------------------------------------------------------
+
+panel <- subset(panel, !is.na(panel$PetID))   #remove controls
+
+panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
+
+
+
+# Invert CT score ---------------------------------------------------------
+
+CTcolumns <- 2:7
+panel[,CTcolumns] <- 1/panel[,CTcolumns]
+panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
 
 # Load and merge host data and pathogen panel data ----------------------
 
@@ -42,6 +80,19 @@ panel$CollectionDate <- strptime(panel$CollectionDate, "%m/%d/%y")
 
 rm(host, keep, discard)
 
+# Subset ------------------------------------------------------------------
+
+panel <- subset(panel, !is.na(panel$PetID))   #remove controls
+
+panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
+
+
+
+# Invert CT score ---------------------------------------------------------
+
+CTcolumns <- 2:7
+panel[,CTcolumns] <- 1/panel[,CTcolumns]
+panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
 
 
 # Manually fix some errors ------------------------------------------------
@@ -92,9 +143,36 @@ for(i in 1:nID){
 
 rm(ss)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Transform CT scores to inverse Ct scores to account for high cycle counts
+# being low path abundance
+
+
+CTcolumns <- 2:7
+panel[,CTcolumns] <- 1/panel[,CTcolumns]
+panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
+
+
+
 # Subest to get just nasal samples 
 
-panel <- subset(panel, !is.na(panel$nasal))  #doesn't work 
+panel <- subset(panel, !is.na(panel$SampleType[nasal]))  #doesn't work 
 panel <- subset(panel, !is.na(panel$PetID))   #remove controls
 
 panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
