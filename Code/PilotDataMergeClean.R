@@ -1,5 +1,5 @@
 
-# Respiratory Pathogen Community Analysis
+# Respiratory Pathogen Microbiome Pilot Analysis 
 # Initial data merging and cleaning of unnecessary columns 
 # Liz Knorr
 # created 4/24/2019
