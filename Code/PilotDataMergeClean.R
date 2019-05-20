@@ -182,6 +182,6 @@ panel$Evenness[even] <- "NaN"
 
 # Save as .csv file (need a Y/N command) ----------------------------------
 
-#write.csv(panel, "C:/Respiratory-Pathogens_Microbiome/.RData//panel.csv",row.names = TRUE)
+write.csv(panel, "/Users/elizabethknorr/Respiratory-Pathogens_Microbiome/Data/panel.csv",row.names = TRUE)
 
 
