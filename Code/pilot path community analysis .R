@@ -76,10 +76,10 @@ legend(x="bottomleft",
        pt.cex=2)
 
 
-plot(Nasal_Pilot_Data$Evenness, Nasal_Pilot_Data$Total_Load, col = Nasal_Pilot_Data$IsSymptomatic, 
+plot(panel$Evenness, panel$Total_Load, col = panel$Symptomatic, 
      pch = 16, xlab = '', ylab = '',cex=3, cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3)
 
-load_myco <- lm(Total_Load ~MCYN_CT_invCT, data = Nasal_Pilot_Data)
+load_myco <- lm(Total_Load ~MCYN, data = panel)
 summary(load_myco)
 
 
