@@ -91,7 +91,12 @@ panel <- subset(panel, !is.na(panel$PetID))   #remove controls
 
 panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
 
+# Inverse Ct scores --------------------------------------------------------
 
+CTcolumns <- 2:7
+
+panel[,CTcolumns] <- 1/panel[,CTcolumns]
+panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
 
 # Manually fix some errors ------------------------------------------------
 
@@ -177,4 +182,5 @@ panel$Evenness[even] <- "NaN"
 
 write.csv(panel, "/Users/elizabethknorr/Respiratory-Pathogens_Microbiome/Data/panel.csv",row.names = TRUE)
 
+write.csv(panel, "/Users/elizabethknorr/Desktop/Pilot Data/Raw Data/panel.csv",row.names = TRUE)
 
