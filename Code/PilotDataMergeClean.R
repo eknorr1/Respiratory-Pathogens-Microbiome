@@ -93,13 +93,6 @@ panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
 
 
 
-# Invert CT score ---------------------------------------------------------
-
-CTcolumns <- 2:7
-panel[,CTcolumns] <- 1/panel[,CTcolumns]
-panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
-
-
 # Manually fix some errors ------------------------------------------------
 
 # Date coded wrong for November samples
@@ -117,8 +110,8 @@ panel$Origin <- factor(panel$Origin)
 
 # Total load 
 
-panel$Total_Load <- panel$CADEN + panel$BCOR + panel$BORD + panel$MCYN 
-  + panel$PINF + panel$PNVPCR 
+panel$Total_Load <- panel$CADEN + panel$BCOR + panel$BORD + panel$MCYN + panel$PINF + panel$PNVPCR 
+
 
 #Number of infections
 
