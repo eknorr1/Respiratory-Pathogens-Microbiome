@@ -98,7 +98,7 @@ panel$Index <- seq.int(nrow(panel))
 
 quartz("",5,5)
 ggplot(data=panel) +
-  geom_point(aes(x=panel$Index,y=panel$MCYN, colour = IsSymptomatic), shape=19, size=5) +
+  geom_point(aes(x=panel$Index,y=panel$MCYN, colour = Symptomatic), shape=19, size=5) +
   labs(x="Nasal Sample") +
   labs(y="Mycoplasma Shedding") +
   theme_bw() +
@@ -131,8 +131,9 @@ plot(panel$Evenness, panel$Total_Load, pch = 16, xlab = "Evenness", ylab = "Tota
 
 graphics.off()
 
+symp_colors<- rep(NA, length=length(panel$Symptomatic))
 
-plot(panel$Evenness,panel$MCYN, col = c("black","red")[panel$IsSymptomatic], 
+plot(panel$Evenness,panel$MCYN, col = panel$Symptomatic, 
      pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), xlab = "", ylab = "", cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4)
 
 
