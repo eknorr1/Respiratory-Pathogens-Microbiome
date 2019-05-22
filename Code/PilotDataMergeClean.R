@@ -177,6 +177,10 @@ panel$Evenness <- (panel$Shannon/ log(panel$Coinfection))
 even <- panel$Evenness=="0"
 panel$Evenness[even] <- "NaN"
 
+# Is Symptomatic --------------------------------------------------------
+
+panel$IsSymptomatic <- factor(panel$Symptomatic==1)
+
 
 # Save as .csv file (need a Y/N command) ----------------------------------
 
