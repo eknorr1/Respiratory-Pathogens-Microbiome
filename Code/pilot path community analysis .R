@@ -130,10 +130,9 @@ plot(panel$Evenness, panel$Total_Load, pch = 16, xlab = "Evenness", ylab = "Tota
 
 
 graphics.off()
-
-symp_colors<- rep(NA, length=length(panel$Symptomatic))
-
-plot(panel$Evenness,panel$MCYN, col = panel$Symptomatic, 
+cols<-c("black",'red')
+symp_colors<- cols[panel$Symptomatic]
+plot(panel$Evenness,panel$MCYN, col = symp_colors, 
      pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), xlab = "", ylab = "", cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4)
 
 
