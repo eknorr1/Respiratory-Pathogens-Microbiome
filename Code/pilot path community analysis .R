@@ -8,7 +8,7 @@
 
 rm(list = ls())
 graphics.off()
-
+palette("default")
 # Load Libraries -------------------------------------------------------
 
 library(vegan)
@@ -22,17 +22,15 @@ library(FactoMineR)
 DataDirectory <- "~/Desktop/Pilot Data/Raw Data"
 
 
-# Load and merge datasets -------------------------------------------------
+# Load dataset ------------------------------------------------------------
 
 setwd(DataDirectory)
 
 panel <- read.csv(file = "panel.csv", stringsAsFactors = F)
 
+panel$IsSymptomatic <- as.integer(panel$IsSymptomatic)
 
-# Analysis Starts -------------------------------------------------
 
-levels(Nasal_Pilot_Data$Symptomatic)[1]<- "0"
-levels(Nasal_Pilot_Data$Symptomatic)[2]<- "1"
 
 # Species richness plot ------------------------------------------------------
 
@@ -53,6 +51,8 @@ plot(panel$Shannon,panel$Total_Load, col=panel$Coinfection)
 
 # Evenness Plots ----------------------------------------------------------------
 
+# Evenness - Total Load colored by coinfections
+
 quartz("",5,5)
 plot(panel$Evenness, panel$Total_Load, col = panel$Coinfection, 
      pch = 16, xlab = '', ylab = '',cex=2, cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2)
@@ -66,6 +66,8 @@ legend(x="bottomleft",
        cex = 1,
        pt.cex=2)
 
+# Evenness - Total Load colored by symptomatic status
+
 quartz("",5,5)
 ggplot(data=panel) +
   geom_point(aes(x=panel$Evenness,y=panel$Total_Load, colour = Symptomatic), shape=19, size=5) +
@@ -73,7 +75,8 @@ ggplot(data=panel) +
   labs(y="Total Load") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black", size = 0.5, linetype = "solid")) +
-  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
+  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), 
+        axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
   theme(axis.title = element_text(color="black", face="bold", size=18)) +
   theme(legend.position="bottom") +
   theme(panel.grid = element_blank()) +
@@ -86,9 +89,7 @@ ggplot(data=panel) +
 
 
 
-load_myco <- lm(Total_Load ~ MCYN, data = panel)
-summary(load_myco)
-
+# Mycoplasma Plots ---------------------------------------------------------------------
 
 panel$Index<- seq.int(nrow(panel))
 
@@ -96,6 +97,7 @@ panel<-panel[order(panel$MCYN),]
 panel$Index <- as.numeric(rownames(panel))
 panel$Index <- seq.int(nrow(panel))
 
+# Mycoplasma abundance in each sample colored by symptomatic
 quartz("",5,5)
 ggplot(data=panel) +
   geom_point(aes(x=panel$Index,y=panel$MCYN, colour = Symptomatic), shape=19, size=5) +
@@ -103,7 +105,8 @@ ggplot(data=panel) +
   labs(y="Mycoplasma Shedding") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black", size = 0.5, linetype = "solid")) +
-  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
+  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), 
+        axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
   theme(axis.title = element_text(color="black", face="bold", size=18)) +
   theme(legend.position="bottom") +
   theme(panel.grid = element_blank()) +
@@ -114,46 +117,156 @@ ggplot(data=panel) +
   scale_color_manual(values = c("darkgrey","red3")
   )
 
+# Mycoplasma - Evenness colored by symptomatic
 
-### Needs Work 
+ggplot(data=panel) +
+  geom_point(aes(x=panel$Evenness,y=panel$MCYN, colour = Symptomatic), shape=19, size=5) +
+  labs(x="Evenness") +
+  labs(y="Mycoplasma") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black", size = 0.5, linetype = "solid")) +
+  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), 
+        axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
+  theme(axis.title = element_text(color="black", face="bold", size=18)) +
+  theme(legend.position="bottom") +
+  theme(panel.grid = element_blank()) +
+  theme(legend.title = element_text(colour="black", size=14, face="bold")) +
+  theme(legend.text = element_text(colour="black", size=14, face="plain")) +
+  scale_x_continuous(limits=c(0.5, 1)) +
+  scale_y_continuous(limits=c(0,0.5)) +
+  scale_color_manual(values = c("black","red3")
+  )
 
-par(mfrow=c(1,2))
-plot(panel$Evenness[panel$MCYN>0],panel$MCYN[panel$MCYN>0], col = panel$IsSymptomatic, pch = 16, xlab = "Evenness",
-     ylab = "Mycoplasma 1/CT",cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
-plot(panel$Evenness[panel$PNVPCR_CT_invCT>0],panel$PNVPCR_CT_invCT[panel$PNVPCR_CT_invCT>0], col = panel$IsSymptomatic, pch = 16, xlab = "Evenness",
-     ylab = "Pneumovirus 1/CT", cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+# Pneumovirus Evenness Plot - colored by symptomatic -------------------------------------------
+
+ggplot(data=panel) +
+  geom_point(aes(x=panel$Evenness,y=panel$PNVPCR, colour = Symptomatic), shape=19, size=5) +
+  labs(x="Evenness") +
+  labs(y="Pneumovirus") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black", size = 0.5, linetype = "solid")) +
+  theme(axis.text.x = element_text(face="plain", color="black", size=14, angle=0), 
+        axis.text.y = element_text(face="plain", color="black", size=14, angle=0)) +
+  theme(axis.title = element_text(color="black", face="bold", size=18)) +
+  theme(legend.position="bottom") +
+  theme(panel.grid = element_blank()) +
+  theme(legend.title = element_text(colour="black", size=14, face="bold")) +
+  theme(legend.text = element_text(colour="black", size=14, face="plain")) +
+  scale_x_continuous(limits=c(0.5, 1)) +
+  scale_y_continuous(limits=c(0,0.5)) +
+  scale_color_manual(values = c("black","red3")
+  )
+
+
+
+# Boxplots --------------------------------------------------------------------------------
 
 graphics.off()
-plot(panel$Evenness, panel$Total_Load, pch = 16, xlab = "Evenness", ylab = "Total Load (1/CT)",
-     cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5, col = panel$Coinfection)
+
+# Number of coinfections in symptomatic and asymptomatic dogs all samples
+boxplot(Coinfection~Symptomatic, data = panel, ylab = "", names=c("Asymptomatic","Symptomatic"),cex.lab=2.5,
+        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("blue","red"), lwd = 3)
+
+# Difference in coinfections from symptomatic/asymptomatic dogs shedding any pathogen
+boxplot(panel$Coinfection[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
+        data = panel, ylab = "", xlab = "",names=c("",""),cex.lab=2.5,
+        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
 
 
+#Difference in mycoplasma loads from symptomatic and asymptomatic dogs shedding myco 
+boxplot(panel$MCYN[panel$MCYN>0]~IsSymptomatic[panel$MCYN>0],
+        data = panel, ylab = "", xlab = "", names=c("",""),cex.lab=2.5, cex.axis=2.5,
+        cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
+
+#Difference in mycoplasma loads from symptomatic and asymptomatic dogs (ALL)
+boxplot(panel$MCYN~IsSymptomatic,
+        data = panel, ylab = "", xlab = "", names=c("Asymptomatic","Symptomatic"),cex.lab=2.5, 
+        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("blue","red"), lwd = 2.7)
+
+
+
+# Histograms without zeros and colored by low, moderate, and high positives ------------------------
 
 graphics.off()
-cols<-c("black",'red')
-symp_colors<- cols[panel$Symptomatic]
-plot(panel$Evenness,panel$MCYN, col = symp_colors, 
-     pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), xlab = "", ylab = "", cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4)
+
+Mycoplasma<-panel$MCYN
+myco_hist<- hist(Mycoplasma[!Mycoplasma<0.060887], xlab = "", xlim = c(0,0.43), 
+                 cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma", col='darkgrey')
+myco_col<- cut(myco_hist$breaks, c(-Inf, 0.12177302, Inf))
+
+Pneumovirus<-panel$PNVPCR
+pneumo_hist<- hist(Pneumovirus[!Pneumovirus<0.05445], xlab = "1/CT (Shedding)",
+                   ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, 
+                   cex.sub=2, col='darkgrey', main = "Pneumovirus")
+pneumo_col<- cut(pneumo_hist$breaks, c(-Inf, 0.10890043, Inf))
+
+Betacoronavirus<-panel$BCOR
+beta_hist<-hist(Betacoronavirus[!Betacoronavirus<0.04918], xlab = "", ylab = "",
+                xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, col='darkgrey',
+                main = "Betacoronavirus")
+beta_col<- cut(beta_hist$breaks, c(-Inf, 0.09834776, Inf))
+
+Bordetella<-panel$BORD
+bord_hist<-hist(Bordetella[!Bordetella<0.051806], xlab = "", xlim = c(0,0.43), cex.lab=2,
+                cex.axis=2, cex.main=3, cex.sub=2, col='darkgrey', main = "Bordetella")
+bord_col<- cut(bord_hist$breaks, c(-Inf, 0.10361191, Inf))
+
+Parainfluenza<-panel$PINF
+para_hist<-hist(Parainfluenza[!Parainfluenza<0.063173], xlab = "1/CT (Shedding)",
+                ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, 
+                cex.sub=2, col='darkgrey', main = "Parainfluenza")
+para_col<- cut(para_hist$breaks, c(-Inf, 0.12634558, Inf))
+
+Adenovirus<-panel$CADEN
+adeno_hist<-hist(Adenovirus[!Adenovirus<0.047086], xlab = "",ylab="", 
+                 xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, 
+                 col='darkgrey', main = "Adenovirus")
+adeno_col<- cut(adeno_hist$breaks, c(-Inf, 0.09417083, Inf))
+
+# All histograms together colored by low, moderate, and high positive cut offs (according to Cornell) -------
+graphics.off()
+par(mfrow=c(2,3))
+plot(myco_hist,col = c("gold","darkorange1","red2")[myco_col],xlab = "",ylab="",
+     xlim = c(0,0.45), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma")
+plot(pneumo_hist,col = c("gold","darkorange1","red2")[pneumo_col],xlab = "",ylab="",
+     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Pneumovirus")
+plot(beta_hist,col = c("gold","darkorange1","red2")[beta_col],xlab = "",ylab="",
+     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Betacoronavirus")
+plot(bord_hist,col = c("gold","darkorange1","red2")[bord_col],xlab = "",ylab="",
+     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Bordetella")
+plot(para_hist,col = c("gold","darkorange1","red2")[para_col],xlab = "",ylab="",
+     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Parainfluenza")
+plot(adeno_hist,col = c("gold","darkorange1","red2")[adeno_col],xlab = "",ylab="",
+     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Adenovirus")
+
+# All histograms together colored with high positive cut off only (according to Cornell) -----------
+graphics.off()
+par(mfrow=c(2,3))
+plot(myco_hist,col = c("darkgrey","red")[myco_col],xlab = "",ylab="",xlim = c(0,0.45),
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma")
+plot(pneumo_hist,col = c("darkgrey","red")[pneumo_col],xlab = "",ylab="",xlim = c(0,0.43), 
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Pneumovirus")
+plot(beta_hist,col = c("darkgrey","red")[beta_col],xlab = "",ylab="",xlim = c(0,0.43),
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Betacoronavirus")
+plot(bord_hist,col = c("darkgrey","red")[bord_col],xlab = "",ylab="",xlim = c(0,0.43),
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Bordetella")
+plot(para_hist,col = c("darkgrey","red")[para_col],xlab = "",ylab="",xlim = c(0,0.43),
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Parainfluenza")
+plot(adeno_hist,col = c("darkgrey","red")[adeno_col],xlab = "",ylab="",xlim = c(0,0.43),
+     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Adenovirus")
 
 
-plot(panel$Evenness,panel$PNVPCR_CT_invCT, col = c("black","red")[panel$IsSymptomatic], 
-     pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), xlab = "", 
-     ylab = "",cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4, lwd = 3)
-legend(x="topright", 
-       legend = paste(c('Asymptomatic','Symptomatic')),
-       col = c('black','red'),
-       title = 'Health Status',
-       pch = 16,
-       inset = 0.02,
-       cex = 1.75,
-       pt.cex=2.25)
+
+
+
+# Some functions for information on samples ---------------------------------------------------
+
 
 dog_uniq<- unique(panel$PetName)
 length(dog_uniq)
 
 infected<- length(which(panel$Total_Load>0))
 print(infected)
-
 
 
 
@@ -239,27 +352,6 @@ boxplot(panel$Coinfection[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
 boxplot(panel$Total_Load[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
         data = panel, ylab = "", xlab = "", names=c("",""), cex.lab=2.5, 
         cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
-
-
-######         Histograms        ######
-
-
-graphics.off()
-par(mfrow=c(2,3), mar=c(7,6,6,5))
-Mycoplasma<-panel$MCYN
-hist(Mycoplasma, xlab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-Pneumovirus<-panel$PNVPCR_CT_invCT
-hist(Pneumovirus, xlab = "1/CT (Shedding)", ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-Betacoronavirus<-panel$BCOR_CT_invCT
-hist(Betacoronavirus, xlab = "", ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-Bordetella<-panel$BORD_CT_invCT
-hist(Bordetella, xlab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-Parainfluenza<-panel$PINF_CT_invCT
-hist(Parainfluenza, xlab = "1/CT (Shedding)",ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-Adenovirus<-panel$CADEN_CT_invCT
-hist(Adenovirus, xlab = "",ylab="", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey')
-
-
 
 
 
@@ -587,3 +679,51 @@ legend('topleft',
        pch = rep(22,length(pal)),
        bty = 'n',
        legend = rev(names(x)))
+
+
+load_myco <- lm(Total_Load ~ MCYN, data = panel)
+summary(load_myco)
+
+par(mfrow=c(1,2))
+plot(panel$Evenness[panel$MCYN>0],panel$MCYN[panel$MCYN>0], col = panel$IsSymptomatic, 
+     pch = 16, xlab = "Evenness",
+     ylab = "Mycoplasma 1/CT",cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+plot(panel$Evenness[panel$PNVPCR_CT_invCT>0],panel$PNVPCR_CT_invCT[panel$PNVPCR_CT_invCT>0], 
+     col = panel$IsSymptomatic, pch = 16, xlab = "Evenness",
+     ylab = "Pneumovirus 1/CT", cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+
+
+
+graphics.off()
+plot(panel$Evenness, panel$Total_Load, pch = 16, xlab = "Evenness", ylab = "Total Load (1/CT)",
+     cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5, col = panel$Coinfection)
+
+plot(panel$Evenness,panel$PNVPCR_CT_invCT, col = c("black","red")[panel$IsSymptomatic], 
+     pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), xlab = "", 
+     ylab = "",cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4, lwd = 3)
+legend(x="topright", 
+       legend = paste(c('Asymptomatic','Symptomatic')),
+       col = c('black','red'),
+       title = 'Health Status',
+       pch = 16,
+       inset = 0.02,
+       cex = 1.75,
+       pt.cex=2.25)
+
+graphics.off()
+cols<-c("black",'red')[panel$IsSymptomatic]
+symp_colors<- cols[panel$IsSymptomatic]
+plot(panel$Evenness,panel$MCYN, col = panel$Symptomatic, 
+     pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), 
+     xlab = "", ylab = "", cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4)
+
+cols<-c("black",'red')
+plot(panel$Evenness,panel$MCYN, col = c("black","red")[panel$IsSymptomatic], 
+     pch = 19, xlim = c(0.4,1), ylim = c(0,0.43), 
+     xlab = "", ylab = "", cex.lab=3, cex.axis=3, cex.main=3, cex.sub=3, cex = 4)
+
+
+boxplot(panel$MCYN[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
+        data = panel, ylab = "", xlab = "Symptomatic Status", names=c("",""),cex.lab=2.5, cex.axis=2.5,
+        cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
+
