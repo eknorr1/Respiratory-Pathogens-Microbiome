@@ -171,7 +171,6 @@ ggplot(data=panel) +
 
 
 
-
 # Boxplots --------------------------------------------------------------------------------
 
 graphics.off()
@@ -195,7 +194,6 @@ boxplot(panel$MCYN[panel$MCYN>0]~IsSymptomatic[panel$MCYN>0],
 boxplot(panel$MCYN~IsSymptomatic,
         data = panel, ylab = "", xlab = "", names=c("Asymptomatic","Symptomatic"),cex.lab=2.5, 
         cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("blue","red"), lwd = 2.7)
-
 
 
 
@@ -307,6 +305,80 @@ print(infected)
 
 
 
+# Correlation matrices -------------------------------------------------------------------------
+ 
+# #without MS2 and SZ: NA because of singularity
+
+graphics.off()
+cor_matrix <- cor(panel[,3:8], y = NULL)
+cor_matrix
+res1 <- cor.mtest(cor_matrix, conf.level = .95)
+
+corrplot(cor_matrix,na.label = "NA",  method = "color", p.mat = res1$p, insig = "p-value", sig.level = -1)
+
+res_all <- cor.mtest(cor_matrix, conf.level = .95)
+corrplot(cor_matrix, method = "color",  p.mat = res_all$p, insig = "p-value", sig.level = -1)
+
+
+# Subset each shelter for individual correlation matrices ----------------------------------------
+
+#Madera
+
+Madera_subset <- subset(panel, Origin == 'Madera', select = Well:PNVPCR)
+madera_matrix <- cor(Madera_subset[,c(2:7)], y = NULL)
+madera_matrix
+corrplot(madera_matrix, method = "color")
+
+res_madera <- cor.mtest(madera_matrix, conf.level = .95)
+corrplot(madera_matrix, method = "color",  p.mat = res_madera$p, insig = "p-value", sig.level = -1)
+
+
+#Merced
+
+Merced_subset <- subset(panel, Origin == 'Merced', select = Well:PNVPCR)
+merced_matrix <- cor(Merced_subset[,c(2:7)], y = NULL)
+merced_matrix
+
+res_merced <- cor.mtest(merced_matrix, conf.level = .95)
+corrplot(merced_matrix, method = "color",  p.mat = res_merced$p, insig = "p-value", sig.level = -1)
+
+# Oakland
+
+Oakland_subset <- subset(panel, Origin == 'Oakland', select = Well:PNVPCR)
+oakland_matrix <- cor(Oakland_subset[,c(2:7)], y = NULL)
+oakland_matrix
+
+colnames(Oakland_subset)
+res_oak <- cor.mtest(oakland_matrix, conf.level = .95)
+corrplot(oakland_matrix, method = "color",  p.mat = res_oak$p, insig = "p-value", sig.level = -1)
+
+#Fresno
+
+Fresno_subset <- subset(panel, Origin == 'Fresno', select = Well:PNVPCR)
+fresno_matrix <- cor(Fresno_subset[,2:7], y = NULL)
+fresno_matrix
+
+res_fresno <- cor.mtest(fresno_matrix, conf.level = .95)
+corrplot(fresno_matrix, method = "color", na.label = "NA",  p.mat = res_fresno$p, insig = "p-value", sig.level = -1)
+
+#Sacramento
+
+Sacramento_subset <- subset(panel, Origin == 'Sacramento', select = Well:PNVPCR)
+sacramento_matrix <- cor(Sacramento_subset[,c(2:7)], y = NULL)
+sacramento_matrix
+
+res_sac <- cor.mtest(sacramento_matrix, conf.level = .95)
+corrplot(sacramento_matrix, method = "color", na.label = "NA",  p.mat = res_sac$p, insig = "p-value", sig.level = -1)
+
+
+#Hayward
+
+Hayward_subset <- subset(panel, Origin == 'Hayward', select = Well:PNVPCR)
+hayward_matrix <- cor(Hayward_subset[,2:7], y = NULL)
+hayward_matrix
+corrplot(hayward_matrix, method = "color")
+
+#Theres only 3 dogs from Hayward, 1 with infection
 
 
 
@@ -319,96 +391,29 @@ print(infected)
 
 
 
-# ##   Extras   ##
+
+
+
+
+# ##   Extras   ## -----------
+
+# Extra for when there are samples from California and Oregon -----------------------------------
+
+# OHS
 # 
-# 
-# #### Correlation matrices #####
-# 
-# #without MS2 and SZ because they were NA because of singularity
-# cor_matrix <- cor(panel[,33:39], y = NULL)
-# cor_matrix
-# res1 <- cor.mtest(cor_matrix, conf.level = .95)
-# 
-# corrplot(cor_matrix,na.label = "NA",  method = "color", p.mat = res1$p, insig = "p-value", sig.level = -1)
-# 
-# res_all <- cor.mtest(cor_matrix, conf.level = .95)
-# corrplot(cor_matrix, method = "color",  p.mat = res_all$p, insig = "p-value", sig.level = -1)
-# 
-# 
-# #### Subset each shelter for individual correlation matrices ######
-# 
-# #Madera
-# 
-# Madera_subset <- subset(panel, Origin == 'Madera', select = Well:IsSymptomatic)
-# madera_matrix <- cor(Madera_subset[,c(33:35,37:39)], y = NULL)
-# madera_matrix
-# corrplot(madera_matrix, method = "color")
-# 
-# res_madera <- cor.mtest(madera_matrix, conf.level = .95)
-# corrplot(madera_matrix, method = "color",  p.mat = res_madera$p, insig = "p-value", sig.level = -1)
-# 
-# 
-# #Merced
-# 
-# Merced_subset <- subset(panel, Origin == 'Merced', select = Well:IsSymptomatic)
-# merced_matrix <- cor(Merced_subset[,c(33:35,37:39)], y = NULL)
-# merced_matrix
-# 
-# res_merced <- cor.mtest(merced_matrix, conf.level = .95)
-# corrplot(merced_matrix, method = "color",  p.mat = res_merced$p, insig = "p-value", sig.level = -1)
-# 
-# # Oakland 
-# 
-# Oakland_subset <- subset(panel, Origin == 'Oakland', select = Well:IsSymptomatic)
-# oakland_matrix <- cor(Oakland_subset[,c(34:37,39)], y = NULL)
-# oakland_matrix
-# 
-# colnames(Oakland_subset)
-# res_oak <- cor.mtest(oakland_matrix, conf.level = .95)
-# corrplot(oakland_matrix, method = "color",  p.mat = res_oak$p, insig = "p-value", sig.level = -1)
-# 
-# #Fresno 
-# 
-# Fresno_subset <- subset(panel, Origin == 'Fresno', select = Well:IsSymptomatic)
-# fresno_matrix <- cor(Fresno_subset[,33:39], y = NULL)
-# fresno_matrix
-# 
-# res_fresno <- cor.mtest(fresno_matrix, conf.level = .95)
-# corrplot(fresno_matrix, method = "color", na.label = "NA",  p.mat = res_fresno$p, insig = "p-value", sig.level = -1)
-# 
-# #Sacramento
-# 
-# Sacramento_subset <- subset(panel, Origin == 'Sacramento', select = Well:IsSymptomatic)
-# sacramento_matrix <- cor(Sacramento_subset[,c(34:37,39)], y = NULL)
-# sacramento_matrix
-# 
-# res_sac <- cor.mtest(sacramento_matrix, conf.level = .95)
-# corrplot(sacramento_matrix, method = "color", na.label = "NA",  p.mat = res_sac$p, insig = "p-value", sig.level = -1)
-# 
-# 
-# #Hayward
-# 
-# Hayward_subset <- subset(panel, Origin == 'Hayward', select = Well:IsSymptomatic)
-# hayward_matrix <- cor(Hayward_subset[,33:39], y = NULL)
-# hayward_matrix
-# corrplot(hayward_matrix, method = "color")
-# 
-# #Theres only 3 dogs from Hayward, 1 with infection
-# #View(Hayward_subset)
-# 
-# # OHS
-# 
-# OHS_subset <- subset(panel, Origin == 'OHS', select = Well:IsSymptomatic)
-# ohs_matrix <- cor(OHS_subset[,33:39], y = NULL)
+# OHS_subset <- subset(panel, Origin == 'OHS', select = Well:PNVPCR)
+# ohs_matrix <- cor(OHS_subset[,2:7], y = NULL)
 # ohs_matrix
 # 
 # res_ohs <- cor.mtest(ohs_matrix, conf.level = .95)
 # corrplot(ohs_matrix, method = "color", na.label = "NA",  p.mat = res_ohs$p, insig = "p-value", sig.level = -1)
 # 
+
 # # Oregon
 # 
-# oregon_subset <- subset(panel, State == 'Oregon', select = Well:IsSymptomatic)
-# oregon_matrix <- cor(oregon_subset[,33:39], y = NULL)
+
+# oregon_subset <- subset(panel, State == 'Oregon', select = Well:PNVPCR)
+# oregon_matrix <- cor(oregon_subset[,2:7], y = NULL)
 # oregon_matrix
 # 
 # res_ore <- cor.mtest(oregon_matrix, conf.level = .95)
@@ -417,16 +422,14 @@ print(infected)
 # 
 # # California
 # 
-# cali_subset <- subset(panel, State == 'California', select = Well:IsSymptomatic)
-# cali_matrix <- cor(cali_subset[,33:39], y = NULL)
+# cali_subset <- subset(panel, State == 'California', select = Well:PNVPCR)
+# cali_matrix <- cor(cali_subset[,2:7], y = NULL)
 # cali_matrix
 # 
 # corrplot(cali_matrix, method = "color")
 # 
 # res_cali <- cor.mtest(cali_matrix, conf.level = .95)
 # corrplot(cali_matrix,na.label = "NA",  method = "color",  p.mat = res_cali$p, insig = "p-value", sig.level = -1)
-# 
-# 
 
 
 
