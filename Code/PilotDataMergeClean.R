@@ -15,53 +15,53 @@ library(vegan)
 
 # Script Parameters ----------------------------------------------------
 
-#set to where data files are located
-
-DataDirectory <- "~/Desktop/Pilot Data/Raw Data"
-CTtarget <- c("CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR")
-
-
-
-# Load and merge datasets -------------------------------------------------
-
-setwd(DataDirectory)
-
-host <- read.csv(file = "SMB_Pilot_Data_1.csv", stringsAsFactors = F)
-keep <- c('Well','PetID','PetName','Origin','CollectionDate','Symptomatic','TotalDNA','TotalRNA')
-host <- host[,keep]
-
-suppressWarnings(host$TotalDNA <- as.numeric(host$TotalDNA))
-suppressWarnings(host$TotalRNA <- as.numeric(host$TotalRNA))
-
-host$Symptomatic <- host$Symptomatic=="Y"
-
-panel <- read.csv(file = "paneldata_1.csv", stringsAsFactors = F)
-discard <- which(names(panel)%in%c("X","MS2","SZ","Type"))
-panel <- panel[,-discard]
-
-panel <- merge(panel, host, by = "Well")
-
-rm(host, keep, discard)
-
-
-# Subset ------------------------------------------------------------------
-
-panel <- subset(panel, !is.na(panel$PetID))   #remove controls
-
-panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
-
-
-
-# Invert CT score ---------------------------------------------------------
-
-# !!! Check colnames that 2 - 7 are "CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR"
-print(colnames(panel))
-
-
-CTcolumns <- 2:7
-
-panel[,CTcolumns] <- 1/panel[,CTcolumns]
-panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
+# #set to where data files are located
+# 
+# DataDirectory <- "~/Desktop/Pilot Data/Raw Data"
+# CTtarget <- c("CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR")
+# 
+# 
+# 
+# # Load and merge datasets -------------------------------------------------
+# 
+# setwd(DataDirectory)
+# 
+# host <- read.csv(file = "SMB_Pilot_Data_1.csv", stringsAsFactors = F)
+# keep <- c('Well','PetID','PetName','Origin','CollectionDate','Symptomatic','TotalDNA','TotalRNA')
+# host <- host[,keep]
+# 
+# suppressWarnings(host$TotalDNA <- as.numeric(host$TotalDNA))
+# suppressWarnings(host$TotalRNA <- as.numeric(host$TotalRNA))
+# 
+# host$Symptomatic <- host$Symptomatic=="Y"
+# 
+# panel <- read.csv(file = "paneldata_1.csv", stringsAsFactors = F)
+# discard <- which(names(panel)%in%c("X","MS2","SZ","Type"))
+# panel <- panel[,-discard]
+# 
+# panel <- merge(panel, host, by = "Well")
+# 
+# rm(host, keep, discard)
+# 
+# 
+# # Subset ------------------------------------------------------------------
+# 
+# panel <- subset(panel, !is.na(panel$PetID))   #remove controls
+# 
+# panel <- panel[,-which(names(panel)=='DIS')]  #remove distemper
+# 
+# 
+# 
+# # Invert CT score ---------------------------------------------------------
+# 
+# # !!! Check colnames that 2 - 7 are "CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR"
+# print(colnames(panel))
+# 
+# 
+# CTcolumns <- 2:7
+# 
+# panel[,CTcolumns] <- 1/panel[,CTcolumns]
+# panel[,CTcolumns][is.na(panel[,CTcolumns])] <- 0
 
 # Load and merge host data and pathogen panel data ----------------------
 
@@ -83,7 +83,12 @@ panel$Symptomatic <- panel$Symptomatic=="Y"
 panel$Origin <- as.factor(panel$Origin)
 panel$CollectionDate <- strptime(panel$CollectionDate, "%m/%d/%y")
 
-rm(host, keep, discard)
+#Check the well and vial ID merge with lab notebook 
+data<- (panel[c(1,15)])
+checkdata<- data[order(data$Well),]
+View(checkdata)
+
+rm(host, keep, discard, data, checkdata)
 
 # Subset ------------------------------------------------------------------
 
