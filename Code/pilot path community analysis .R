@@ -49,7 +49,8 @@ hist(Shannon)
 Shan_increasing <- sort(panel$Shannon,decreasing = FALSE)
 plot(Shan_increasing)
 
-
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
 plot(panel$Shannon,panel$Total_Load, col=panel$Coinfection)
 
 
@@ -61,8 +62,10 @@ plot(panel$Shannon,panel$Total_Load, col=panel$Coinfection)
 # Evenness - Total Load colored by coinfections
 
 #quartz("",5,5)
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
 plot(panel$Evenness, panel$Total_Load, col = panel$Coinfection, 
-     pch = 16, xlab = '', ylab = '',cex=2, cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2)
+     pch = 16, xlab = 'Evenness', ylab = 'Total Load')
 
 legend(x="bottomleft", 
        legend = paste(c('2','3','4','5','6')),
@@ -70,12 +73,14 @@ legend(x="bottomleft",
        title = 'Infections',
        pch = 16,
        inset = 0.02,
-       cex = 1,
-       pt.cex=2)
+       cex = 0.9
+       )
 
 # Evenness - Total Load colored by symptomatic status
 
 #quartz("",5,5)
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
 ggplot(data=panel) +
   geom_point(aes(x=panel$Evenness,y=panel$Total_Load, colour = Symptomatic), shape=19, size=5) +
   labs(x="Evenness") +
@@ -176,99 +181,75 @@ ggplot(data=panel) +
 graphics.off()
 
 # Number of coinfections in symptomatic and asymptomatic dogs all samples
-boxplot(Coinfection~Symptomatic, data = panel, ylab = "", names=c("Asymptomatic","Symptomatic"),cex.lab=2.5,
-        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("blue","red"), lwd = 3)
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
+boxplot(Coinfection~Symptomatic, data = panel, ylab = "", names=c("Asymptomatic","Symptomatic"), col=c("blue","red"))
 
 # Difference in coinfections from symptomatic/asymptomatic dogs shedding any pathogen
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
 boxplot(panel$Coinfection[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
-        data = panel, ylab = "", xlab = "",names=c("",""),cex.lab=2.5,
-        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
+        data = panel, ylab = "", xlab = "",names=c("Symptomatic","Asymptomatic"), col=c("royalblue3","red3"))
 
 
 #Difference in mycoplasma loads from symptomatic and asymptomatic dogs shedding myco 
+par(fin = c(4,4))
+par(mai = c(0.8,0.8,0.8,0.8))
 boxplot(panel$MCYN[panel$MCYN>0]~IsSymptomatic[panel$MCYN>0],
-        data = panel, ylab = "", xlab = "", names=c("",""),cex.lab=2.5, cex.axis=2.5,
-        cex.main=2.5, cex.sub=2.5, col=c("royalblue3","red3"), lwd = 2.7)
+        data = panel, ylab = "", xlab = "", names=c("a","b"), col=c("royalblue3","red3"))
 
 #Difference in mycoplasma loads from symptomatic and asymptomatic dogs (ALL)
 boxplot(panel$MCYN~IsSymptomatic,
-        data = panel, ylab = "", xlab = "", names=c("Asymptomatic","Symptomatic"),cex.lab=2.5, 
-        cex.axis=2.5, cex.main=2.5, cex.sub=2.5, col=c("blue","red"), lwd = 2.7)
+        data = panel, ylab = "", xlab = "", names=c("Asymptomatic","Symptomatic"), col=c("blue","red"))
 
 
 
 
 # Histograms without zeros and colored by low, moderate, and high positives ------------------------
 
-
 graphics.off()
+par(mfrow=c(2,3))
 
 Mycoplasma<-panel$MCYN
-myco_hist<- hist(Mycoplasma[!Mycoplasma<0.060887], xlab = "", xlim = c(0,0.43), 
-                 cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma", col='darkgrey')
-myco_col<- cut(myco_hist$breaks, c(-Inf, 0.12177302, Inf))
+myco_hist<- hist(Mycoplasma[!Mycoplasma==0], xlab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Mycoplasma", col='darkgrey')
+myco_col<- cut(myco_hist$breaks, c(-Inf,0.060887, 0.12177302, Inf))
 
 Pneumovirus<-panel$PNVPCR
-pneumo_hist<- hist(Pneumovirus[!Pneumovirus<0.05445], xlab = "1/CT (Shedding)",
-                   ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, 
-                   cex.sub=2, col='darkgrey', main = "Pneumovirus")
-pneumo_col<- cut(pneumo_hist$breaks, c(-Inf, 0.10890043, Inf))
+pneumo_hist<- hist(Pneumovirus[!Pneumovirus==0], xlab = "1/CT (Shedding)", ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey', main = "Pneumovirus")
+pneumo_col<- cut(pneumo_hist$breaks, c(-Inf,0.05445, 0.10890043, Inf))
 
 Betacoronavirus<-panel$BCOR
-beta_hist<-hist(Betacoronavirus[!Betacoronavirus<0.04918], xlab = "", ylab = "",
-                xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, col='darkgrey',
-                main = "Betacoronavirus")
-beta_col<- cut(beta_hist$breaks, c(-Inf, 0.09834776, Inf))
+beta_hist<-hist(Betacoronavirus[!Betacoronavirus==0], xlab = "", ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey', main = "Betacoronavirus")
+beta_col<- cut(beta_hist$breaks, c(-Inf,0.04918, 0.09834776, Inf))
 
 Bordetella<-panel$BORD
-bord_hist<-hist(Bordetella[!Bordetella<0.051806], xlab = "", xlim = c(0,0.43), cex.lab=2,
-                cex.axis=2, cex.main=3, cex.sub=2, col='darkgrey', main = "Bordetella")
-bord_col<- cut(bord_hist$breaks, c(-Inf, 0.10361191, Inf))
+bord_hist<-hist(Bordetella[!Bordetella==0], xlab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey', main = "Bordetella")
+bord_col<- cut(bord_hist$breaks, c(-Inf,0.051806, 0.10361191, Inf))
 
 Parainfluenza<-panel$PINF
-para_hist<-hist(Parainfluenza[!Parainfluenza<0.063173], xlab = "1/CT (Shedding)",
-                ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, 
-                cex.sub=2, col='darkgrey', main = "Parainfluenza")
-para_col<- cut(para_hist$breaks, c(-Inf, 0.12634558, Inf))
+para_hist<-hist(Parainfluenza[!Parainfluenza==0], xlab = "1/CT (Shedding)",ylab = "", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey', main = "Parainfluenza")
+para_col<- cut(para_hist$breaks, c(-Inf,0.063173, 0.12634558, Inf))
 
 Adenovirus<-panel$CADEN
-adeno_hist<-hist(Adenovirus[!Adenovirus<0.047086], xlab = "",ylab="", 
-                 xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, 
-                 col='darkgrey', main = "Adenovirus")
-adeno_col<- cut(adeno_hist$breaks, c(-Inf, 0.09417083, Inf))
+adeno_hist<-hist(Adenovirus[!Adenovirus==0], xlab = "",ylab="", xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, col='darkgrey', main = "Adenovirus")
+adeno_col<- cut(adeno_hist$breaks, c(-Inf,0.047086, 0.09417083, Inf))
 
-# All histograms together colored by low, moderate, and high positive cut offs (according to Cornell) -------
+
 graphics.off()
 par(mfrow=c(2,3))
-plot(myco_hist,col = c("gold","darkorange1","red2")[myco_col],xlab = "",ylab="",
-     xlim = c(0,0.45), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma")
-plot(pneumo_hist,col = c("gold","darkorange1","red2")[pneumo_col],xlab = "",ylab="",
-     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Pneumovirus")
-plot(beta_hist,col = c("gold","darkorange1","red2")[beta_col],xlab = "",ylab="",
-     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Betacoronavirus")
-plot(bord_hist,col = c("gold","darkorange1","red2")[bord_col],xlab = "",ylab="",
-     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Bordetella")
-plot(para_hist,col = c("gold","darkorange1","red2")[para_col],xlab = "",ylab="",
-     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Parainfluenza")
-plot(adeno_hist,col = c("gold","darkorange1","red2")[adeno_col],xlab = "",ylab="",
-     xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Adenovirus")
-
-# All histograms together colored with high positive cut off only (according to Cornell) -----------
-graphics.off()
-par(mfrow=c(2,3))
-plot(myco_hist,col = c("darkgrey","red")[myco_col],xlab = "",ylab="",xlim = c(0,0.45),
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Mycoplasma")
-plot(pneumo_hist,col = c("darkgrey","red")[pneumo_col],xlab = "",ylab="",xlim = c(0,0.43), 
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Pneumovirus")
-plot(beta_hist,col = c("darkgrey","red")[beta_col],xlab = "",ylab="",xlim = c(0,0.43),
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Betacoronavirus")
-plot(bord_hist,col = c("darkgrey","red")[bord_col],xlab = "",ylab="",xlim = c(0,0.43),
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Bordetella")
-plot(para_hist,col = c("darkgrey","red")[para_col],xlab = "",ylab="",xlim = c(0,0.43),
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Parainfluenza")
-plot(adeno_hist,col = c("darkgrey","red")[adeno_col],xlab = "",ylab="",xlim = c(0,0.43),
-     cex.lab=2, cex.axis=2, cex.main=3, cex.sub=2, main = "Adenovirus")
-
+plot(myco_hist,col = c("gold","darkorange1","red2")[myco_col],xlab = "",ylab="",xlim = c(0,0.45), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Mycoplasma")
+plot(pneumo_hist,col = c("gold","darkorange1","red2")[pneumo_col],xlab = "",ylab="",xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Pneumovirus")
+plot(beta_hist,col = c("gold","darkorange1","red2")[beta_col],xlab = "",ylab="",xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Betacoronavirus")
+# #legend(x="topright",
+#        legend = paste(c('Low Positive','Moderate Positive','High Positive')),
+#        col = c("gold","darkorange1","red2"),
+#        pch = 15,
+#        inset = 0.02,
+#        cex = 1.75,
+#        pt.cex=2.5)
+plot(bord_hist,col = c("gold","darkorange1","red2")[bord_col],xlab = "",ylab="",xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Bordetella")
+plot(para_hist,col = c("gold","darkorange1","red2")[para_col],xlab = "",ylab="",xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Parainfluenza")
+plot(adeno_hist,col = c("gold","darkorange1","red2")[adeno_col],xlab = "",ylab="",xlim = c(0,0.43), cex.lab=2, cex.axis=2, cex.main=2, cex.sub=2, main = "Adenovirus")
 
 
 
@@ -312,10 +293,6 @@ print(infected)
 graphics.off()
 cor_matrix <- cor(panel[,3:8], y = NULL)
 cor_matrix
-res1 <- cor.mtest(cor_matrix, conf.level = .95)
-
-corrplot(cor_matrix,na.label = "NA",  method = "color", p.mat = res1$p, insig = "p-value", sig.level = -1)
-
 res_all <- cor.mtest(cor_matrix, conf.level = .95)
 corrplot(cor_matrix, method = "color",  p.mat = res_all$p, insig = "p-value", sig.level = -1)
 
@@ -327,8 +304,6 @@ corrplot(cor_matrix, method = "color",  p.mat = res_all$p, insig = "p-value", si
 Madera_subset <- subset(panel, Origin == 'Madera', select = Well:PNVPCR)
 madera_matrix <- cor(Madera_subset[,c(2:7)], y = NULL)
 madera_matrix
-corrplot(madera_matrix, method = "color")
-
 res_madera <- cor.mtest(madera_matrix, conf.level = .95)
 corrplot(madera_matrix, method = "color",  p.mat = res_madera$p, insig = "p-value", sig.level = -1)
 
@@ -338,7 +313,6 @@ corrplot(madera_matrix, method = "color",  p.mat = res_madera$p, insig = "p-valu
 Merced_subset <- subset(panel, Origin == 'Merced', select = Well:PNVPCR)
 merced_matrix <- cor(Merced_subset[,c(2:7)], y = NULL)
 merced_matrix
-
 res_merced <- cor.mtest(merced_matrix, conf.level = .95)
 corrplot(merced_matrix, method = "color",  p.mat = res_merced$p, insig = "p-value", sig.level = -1)
 
@@ -347,8 +321,6 @@ corrplot(merced_matrix, method = "color",  p.mat = res_merced$p, insig = "p-valu
 Oakland_subset <- subset(panel, Origin == 'Oakland', select = Well:PNVPCR)
 oakland_matrix <- cor(Oakland_subset[,c(2:7)], y = NULL)
 oakland_matrix
-
-colnames(Oakland_subset)
 res_oak <- cor.mtest(oakland_matrix, conf.level = .95)
 corrplot(oakland_matrix, method = "color",  p.mat = res_oak$p, insig = "p-value", sig.level = -1)
 
@@ -357,7 +329,6 @@ corrplot(oakland_matrix, method = "color",  p.mat = res_oak$p, insig = "p-value"
 Fresno_subset <- subset(panel, Origin == 'Fresno', select = Well:PNVPCR)
 fresno_matrix <- cor(Fresno_subset[,2:7], y = NULL)
 fresno_matrix
-
 res_fresno <- cor.mtest(fresno_matrix, conf.level = .95)
 corrplot(fresno_matrix, method = "color", na.label = "NA",  p.mat = res_fresno$p, insig = "p-value", sig.level = -1)
 
@@ -366,22 +337,16 @@ corrplot(fresno_matrix, method = "color", na.label = "NA",  p.mat = res_fresno$p
 Sacramento_subset <- subset(panel, Origin == 'Sacramento', select = Well:PNVPCR)
 sacramento_matrix <- cor(Sacramento_subset[,c(2:7)], y = NULL)
 sacramento_matrix
-
 res_sac <- cor.mtest(sacramento_matrix, conf.level = .95)
 corrplot(sacramento_matrix, method = "color", na.label = "NA",  p.mat = res_sac$p, insig = "p-value", sig.level = -1)
 
 
-#Hayward
+#Hayward only 5 samples
 
 Hayward_subset <- subset(panel, Origin == 'Hayward', select = Well:PNVPCR)
 hayward_matrix <- cor(Hayward_subset[,2:7], y = NULL)
 hayward_matrix
 corrplot(hayward_matrix, method = "color")
-
-#Theres only 3 dogs from Hayward, 1 with infection
-
-
-
 
 
 
