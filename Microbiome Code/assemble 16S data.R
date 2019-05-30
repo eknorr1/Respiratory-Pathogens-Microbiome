@@ -1,6 +1,7 @@
 # Canine nosomes: Assemble and clean 16S data 
 #
-# April 22, 2019
+# Created by Ben: April 22, 2019
+# Edited May 25: Liz Knorr
 
 rm(list = ls())
 graphics.off()
