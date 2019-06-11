@@ -1,10 +1,11 @@
 # Canine nosomes: Merge panel and 16S data
 #
 # April 22, 2019
-
+#Edited June 11 by Liz Knorr
 
 rm(list = ls())
 graphics.off()
+
 
 library(metacoder)
 library(phyloseq)
@@ -14,7 +15,7 @@ library(RColorBrewer)
 
 # Paths -------------------------------------------------------------------
 
-pathToAssembledData <- "~/Dropbox/Research/Active/Canine nosomes/Data/Assembled/"
+pathToAssembledData <- "~/Users/elizabethknorr/Respiratory-Pathogens_Microbiome/Microbiome Code"
 
 
 
