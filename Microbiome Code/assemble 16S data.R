@@ -17,9 +17,9 @@ library(phyloseq)
 
 # Working directories ------------------------------------------------------
 
-path16Srun1 <- "~/Dropbox/Research/Active/Canine nosomes/Data/Microbiome/run1_output_f2_r2/"
-path16Srun2 <- "~/Dropbox/Research/Active/Canine nosomes/Data/Microbiome/run2_output_f2_r2/"
-pathOutput <- "~/Dropbox/Research/Active/Canine nosomes/Data/Assembled/"
+path16Srun1 <- "~/Dropbox/Data/Microbiome/run1_output_f2_r2/"
+path16Srun2 <- "~/Dropbox/Data/Microbiome/run2_output_f2_r2/"
+pathOutput <- "~/Dropbox/Data/Assembled/"
 
 
 
