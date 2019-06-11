@@ -7,8 +7,8 @@ graphics.off()
 
 # Script parameters -------------------------------------------------------
 
-InputDirectory <- "~/Dropbox/Research/Active/Canine nosomes/Data/Pilot data from Liz Jan2019/"
-OutputDirectory <- "~/Dropbox/Research/Active/Canine nosomes/Data/Assembled/"
+InputDirectory <- "~/Dropbox/Data/Pilot data from Liz Jan2019/"
+OutputDirectory <- "~/Users/elizabethknorr/Respiratory-Pathogens_Microbiome/Microbiome Code"
 
 
 
