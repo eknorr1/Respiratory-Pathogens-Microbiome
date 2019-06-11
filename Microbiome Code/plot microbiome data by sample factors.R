@@ -1,6 +1,7 @@
 # Canine nosomes: Plot 16S data by sample factors
 #
 # April 23, 2019
+#Edited by Liz on 6/9/19
 
 rm(list = ls())
 graphics.off()
@@ -13,18 +14,18 @@ library(metacoder)
 
 # Script parameters -------------------------------------------------------
 
-pathToAssembledData <- "~/Dropbox/Research/Active/Canine nosomes/Data/Assembled/"
+#pathToAssembledData <- "~/Dropbox/Research/Active/Canine nosomes/Data/Assembled/"
 
-
-
+setwd("~/Respiratory-Pathogens_Microbiome/Microbiome Code")
 
 
 
 
 # Load and convert data ---------------------------------------------------
 
-setwd(pathToAssembledData)
+
 load("16S_combined.Rdata")
+load("~/Respiratory-Pathogens_Microbiome/Microbiome Code/16S_combined.Rdata")
 tm <- parse_phyloseq(sxs)
 obj <- tm
 
@@ -113,7 +114,8 @@ obj$data$diff_table$log2_median_ratio_adjusted[obj$data$diff_table$wilcox_p_valu
 
 node_color_range <- c("seagreen", "grey", "orange")
 
-setwd("~/Dropbox/Research/Active/Canine nosomes/Figures/")
+setwd("~/Respiratory-Pathogens_Microbiome/Microbiome Figures")
+
 heat_tree(obj,
          node_label = taxon_names,
          node_size = n_obs(obj, "diff_table"),
