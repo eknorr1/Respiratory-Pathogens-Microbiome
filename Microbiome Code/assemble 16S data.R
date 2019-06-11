@@ -120,7 +120,7 @@ ps <- prune_taxa(taxa_sums(ps) > k, ps)
 
 sxs <- ps
 
-setwd(pathOutput)
+setwd("~/Respiratory-Pathogens_Microbiome/Microbiome Code")
 save(sxs, file = "16S.Rdata")
 
 
