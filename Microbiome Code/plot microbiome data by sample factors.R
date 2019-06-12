@@ -6,6 +6,7 @@
 rm(list = ls())
 graphics.off()
 
+install.packages("metacoder")
 
 library(RColorBrewer)
 library(phyloseq)
@@ -79,9 +80,9 @@ obj$data$tax_abund <- calc_taxon_abund(obj, "otu_table",
 
 # Generate comparisons ----------------------------------------------------
 
-is_included <- obj$data$sample_data$SampleType == "nasal"
-treatment_groups <- obj$data$sample_data$Symptomatic[is_included]
-selected_samples <- obj$data$sample_data$sample_id[is_included]
+is_included <- obj$data$sam_data$SampleType=="nasal"
+treatment_groups <- obj$data$sam_data$Symptomatic[is_included]
+selected_samples <- obj$data$sam_data$sample_id[is_included]
 
 obj$data$diff_table <- compare_groups(obj,
                                       data = "tax_abund",
