@@ -10,6 +10,9 @@ graphics.off()
 
 # Libraries ---------------------------------------------------------------
 
+source('http://bioconductor.org/biocLite.R')
+biocLite('phyloseq')
+
 library(phyloseq)
 
 
