@@ -77,8 +77,8 @@ legend(x="bottomleft",
        )
 
 # Evenness - Total Load colored by symptomatic status
-
-#quartz("",5,5)
+graphics.off()
+quartz("",7,6)
 par(fin = c(4,4))
 par(mai = c(0.8,0.8,0.8,0.8))
 ggplot(data=panel) +
@@ -111,7 +111,7 @@ panel$Index <- as.numeric(rownames(panel))
 panel$Index <- seq.int(nrow(panel))
 
 # Mycoplasma abundance in each sample colored by symptomatic
-#quartz("",5,5)
+quartz("",7,6)
 ggplot(data=panel) +
   geom_point(aes(x=panel$Index,y=panel$MCYN, colour = Symptomatic), shape=19, size=5) +
   labs(x="Nasal Sample") +
@@ -131,7 +131,7 @@ ggplot(data=panel) +
   )
 
 # Mycoplasma - Evenness colored by symptomatic 
-
+quartz("",7,6)
 ggplot(data=panel) +
   geom_point(aes(x=panel$Evenness,y=panel$MCYN, colour = Symptomatic), shape=19, size=5) +
   labs(x="Evenness") +
@@ -191,16 +191,22 @@ par(mai = c(0.8,0.8,0.8,0.8))
 boxplot(panel$Coinfection[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
         data = panel, ylab = "", xlab = "",names=c("Symptomatic","Asymptomatic"), col=c("royalblue3","red3"))
 
+graphics.off()
+boxplot(panel$Coinfection[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
+        data = panel, ylab = "", xlab = "",names=c("Symptomatic","Asymptomatic"), col=c("royalblue3","red3"))
 
 #Difference in mycoplasma loads from symptomatic and asymptomatic dogs shedding myco 
 par(fin = c(4,4))
-par(mai = c(0.8,0.8,0.8,0.8))
+par(mai = c(0.7,0.7,0.7,0.7))
 boxplot(panel$MCYN[panel$MCYN>0]~IsSymptomatic[panel$MCYN>0],
         data = panel, ylab = "", xlab = "", names=c("a","b"), col=c("royalblue3","red3"))
 
 #Difference in mycoplasma loads from symptomatic and asymptomatic dogs (ALL)
-boxplot(panel$MCYN~IsSymptomatic,
-        data = panel, ylab = "", xlab = "", names=c("Asymptomatic","Symptomatic"), col=c("blue","red"))
+par(mgp=c(5,1,0))
+par(mar=c(2,5,2,2))
+boxplot(panel$MCYN[panel$Total_Load>0]~IsSymptomatic[panel$Total_Load>0],
+        data = panel, ylab = "Mycoplasma Load", xlab = "", 
+        names=c("Asymptomatic","Symptomatic"), col=c("royalblue3","red3"))
 
 
 
