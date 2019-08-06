@@ -10,7 +10,7 @@ graphics.off()
 DataDirectory <- "~/Dropbox/Research/Active/Canine nosomes/Data/Pilot data from Liz Jan2019/"
 CTtarget <- c("CADEN", "BCOR", "BORD", "MCYN", "PINF", "PNVPCR")
 
-
+CTtarget <- c("CADEN")
 
 # Load and merge datasets -------------------------------------------------
 
@@ -100,9 +100,9 @@ rm(ss)
 
 
 # CT score by symptomatic and sampling seqeunce
-quartz(h=6,w=6, title = "Shedding by sampling sequence and disease status")
-par(mfrow=c(3,2))
-par(mar=c(3,4,3,2))
+quartz(h=4,w=7, title = "Shedding by sampling sequence and disease status")
+#par(mfrow=c(3,1))
+#par(mar=c(3,4,3,2))
 
 CTcolumn <- which(names(panel) %in% CTtarget)
 symp <- rep("N", nrow(panel))
