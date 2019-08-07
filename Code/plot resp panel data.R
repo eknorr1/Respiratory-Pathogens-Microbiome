@@ -140,8 +140,8 @@ if(0){
 
 # Barplot -----------------------------------------------------------------
 
-quartz(h=4,w=10)
-
+#quartz(h=4,w=10)
+graphics.off()
 symp <- subset(panel, panel$Symptomatic)
 asymp <- subset(panel, !panel$Symptomatic)
 
@@ -162,19 +162,167 @@ legend('topleft',
        bty = 'n',
        legend = rev(names(x)))
 
+#-----------------------------------
+panel$SamplingSequence <- NA
+panel$EverSymptomatic <- FALSE
+panel$BecameSymptomatic <- FALSE
 
-# Load versus Shannon -----------------------------------------------------
+uniqueID <- unique(panel$PetID)
+nID <- length(uniqueID)
 
-quartz(h=6,w=8)
-par(mfrow=c(2,3))
-plot(jitter(panel$Richness), panel$MCYN)
-plot(jitter(panel$Richness), panel$PNVPCR)
-plot(jitter(panel$Richness), panel$PINF)
-
-plot(panel$Shannon, panel$MCYN)
-plot(panel$Shannon, panel$PNVPCR)
-plot(panel$Shannon, panel$PINF)
-
-
-
+for(i in 1:nID){
+  
+  j <- which(panel$PetID==uniqueID[i])
+  
+  ss <- panel[j,]
+  ss <- ss[order(ss$CollectionDate),]       #ordering by time...
+  
+  ss$Origin <- ss$Origin[1]                 #set Origin to what it was on their first sample
+  
+  ss$SamplingSequence <- 1:length(j)        
+  ss$EverSymptomatic <- any(ss$Symptomatic)
+  ss$BecameSymptomatic <- any(ss$Symptomatic) & !ss$Symptomatic[1]
+  
+  panel[j,] <- ss                           #...they go back in a different order than they went in
+  
 }
+
+rm(ss)
+
+
+
+DogID<- c('195349','195356','195353','195319','195352', '195635')
+
+# Barplot -----------------------------------------------------------------
+
+panelTiny <- panel[which(panel$PetID==195349),]
+
+#quartz(h=4,w=10)
+graphics.off()
+symp <- subset(panel, panel$Symptomatic)
+asymp <- subset(panel, !panel$Symptomatic)
+
+x <- panelTiny[,CTcolumns]
+x <- x[order(panelTiny$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+#######################################################
+panelMichelle <- panel[which(panel$PetID==195356),]
+
+x <- panelMichelle[,CTcolumns]
+x <- x[order(panelMichelle$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+#######################################################
+panelOsborne <- panel[which(panel$PetID==195353),]
+
+x <- panelOsborne[,CTcolumns]
+x <- x[order(panelOsborne$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+#######################################################
+panelSqueak <- panel[which(panel$PetID==195319),]
+
+x <- panelSqueak[,CTcolumns]
+x <- x[order(panelSqueak$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+#######################################################
+panelBismark <- panel[which(panel$PetID==195352),]
+
+x <- panelBismark[,CTcolumns]
+x <- x[order(panelBismark$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+
+#######################################################
+panelSally <- panel[which(panel$PetID==195635),]
+
+x <- panelSally[,CTcolumns]
+x <- x[order(panelSally$CollectionDate),]
+x <- x[,c('MCYN','BCOR','BORD',"CADEN",'PNVPCR')]
+
+pal <- 2:(ncol(x)+1)
+
+barplot(t(as.matrix(x)),col = pal, border = pal, 
+        names.arg = rep(NA,nrow(x)),
+        ylab = 'Load')
+
+legend('topleft',
+       col = rev(pal),
+       pt.bg = rev(pal),
+       pch = rep(22,length(pal)),
+       bty = 'n',
+       legend = rev(names(x)))
+
+
+
+
+
+
+
